@@ -18,3 +18,12 @@ docker-compose up
 
 ## Остановка
 docker-compose down --volumes --rmi all
+
+# Комментарии и полезные ссылки
+
+О том как использовать датасет как сенсор при обновлении таблицы в базе
+https://stackoverflow.com/questions/75869048/how-to-use-a-table-as-dataset-for-airflow-in-data-aware-scheduling
+
+запуск одного дага по факту
+    обновления кого-нибудь темпового файла
+    Информация отсюда: https://youtu.be/kPI2mPs-eQA
