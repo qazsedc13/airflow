@@ -17,6 +17,9 @@ start_airflow-init_1 exited with code 0
 docker-compose up
 
 ## Остановка
+### простая остановка
+docker-compose stop
+### остановка с удалением контейнеров и образов
 docker-compose down --volumes --rmi all
 
 # Комментарии и полезные ссылки
