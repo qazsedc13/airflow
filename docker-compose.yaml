@@ -88,21 +88,36 @@ services:
     ports:
       - 5432:5432
   
-  db:
+  db_kap:
     image: postgres:11
     environment:
-      POSTGRES_USER: qazsedc13
+      POSTGRES_USER: kap_247_db
       POSTGRES_PASSWORD: 456321z
-      POSTGRES_DB: qazsedc13
+      POSTGRES_DB: kap_247_db
     volumes:
-      - postgresdbsql:/var/lib/postgresql/data
+      - postgresdbsql_kap:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "qazsedc13"]
+      test: ["CMD", "pg_isready", "-U", "kap_247_db"]
       interval: 5s
       retries: 5
     restart: always
     ports:
       - 5433:5432
+  db_pkap:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: pkap_247_db
+      POSTGRES_PASSWORD: 456321z
+      POSTGRES_DB: pkap_247_db
+    volumes:
+      - postgresdbsql_pkap:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "pkap_247_db"]
+      interval: 5s
+      retries: 5
+    restart: always
+    ports:
+      - 5434:5432
 
   s3server:
     image: scality/s3server:latest
@@ -308,6 +323,7 @@ services:
 
 volumes:
   postgres-db-volume:
-  postgresdbsql:
+  postgresdbsql_kap:
+  postgresdbsql_pkap:
   s3data:
   s3metadata:
