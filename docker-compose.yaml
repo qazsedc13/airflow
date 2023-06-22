@@ -92,7 +92,7 @@ services:
     image: postgres:11
     environment:
       POSTGRES_USER: kap_247_db
-      POSTGRES_PASSWORD: 456321z
+      POSTGRES_PASSWORD: kap_247_db
       POSTGRES_DB: kap_247_db
     volumes:
       - postgresdbsql_kap:/var/lib/postgresql/data
@@ -107,7 +107,7 @@ services:
     image: postgres:11
     environment:
       POSTGRES_USER: pkap_247_db
-      POSTGRES_PASSWORD: 456321z
+      POSTGRES_PASSWORD: pkap_247_db
       POSTGRES_DB: pkap_247_db
     volumes:
       - postgresdbsql_pkap:/var/lib/postgresql/data
