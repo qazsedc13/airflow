@@ -15,7 +15,6 @@ with DAG(
 
     @task(outlets=[my_file])
     def update_my_file():
-        with open(my_file.uri, 'a+') as f:
-            f.write('producer update')
+        print("producer update")
     
     update_my_file()

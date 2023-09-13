@@ -15,7 +15,6 @@ with DAG(
 
     @task
     def read_my_file():
-        with open(my_file.uri, 'r') as f:
-            print(f.read())
+        print("Сработало")
     
     read_my_file()
