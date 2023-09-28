@@ -37,7 +37,7 @@ def _print():
 
 dag = DAG('dag1',
           schedule_interval=timedelta(days=1),
-          start_date=datetime(2023, 1, 1)
+          start_date=datetime(2022, 12, 28)
           )
 
 waiting = SqlSensor(
@@ -46,7 +46,7 @@ waiting = SqlSensor(
         sql="""
         SELECT count(*) as cnt
         FROM bp_247_chm.currency
-        where date("date") = date(current_timestamp - '1 DAY'::interval)
+        where date("date") = date(to_date('{{ ds }}', 'YYYY-MM-DD') - '1 DAY'::interval)
         """,
         success=_success_criteria,
         failure=_failure_criteria,
