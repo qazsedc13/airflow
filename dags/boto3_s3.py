@@ -97,14 +97,17 @@ with DAG(
 
             b = buf.decode('utf-8')
             b = b.replace('\0', '').replace('""', '')
-            return pd.read_csv(io.StringIO(b), sep=';', encoding='utf-8', dtype='str')
+            return pd.read_csv(io.StringIO(b), sep=';', encoding='utf-8', dtype='str', chunksize=1000)
         
         engine_kap = _get_engine(CONN_ID_KAP)
         list_file = ['test.csv']
         for file in list_file:
             print(file)
-            df = read_s3(file, bucket_name)
-            df.to_sql('test',
+            i = 0
+            for chank in read_s3(file, bucket_name):
+                print(i)
+                i += 1
+                chank.to_sql('test',
                       engine_kap,
                       schema='temp_247_sch',
                       if_exists='replace',
