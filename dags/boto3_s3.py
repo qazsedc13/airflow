@@ -88,30 +88,45 @@ with DAG(
         bucket = s3.Bucket(bucket_name)
         list_file = [file.key for file in bucket.objects.all()]
         print(list_file)
-        def read_s3(key: str, bucket_name: str) -> str:
-            hook = S3Hook(aws_conn_id='s3_conn', verify=False)
-            buffer = io.BytesIO()
-            s3_obj = hook.get_key(key, bucket_name)
-            s3_obj.download_fileobj(buffer)
-            buf = buffer.getvalue()
-
-            b = buf.decode('utf-8')
-            b = b.replace('\0', '').replace('""', '')
-            return pd.read_csv(io.StringIO(b), sep=';', encoding='utf-8', dtype='str', chunksize=1000)
-        
         engine_kap = _get_engine(CONN_ID_KAP)
-        list_file = ['test.csv']
-        for file in list_file:
-            print(file)
-            i = 0
-            for chank in read_s3(file, bucket_name):
-                print(i)
-                i += 1
-                chank.to_sql('test',
-                      engine_kap,
-                      schema='temp_247_sch',
-                      if_exists='replace',
-                      index=False)
+        storage_options = {
+            'key': r'UastUiLUTOXlGHCSoEGz',
+            'secret': r'20TNnQzoCDgrfy4sGGqvm6yVE4xq3hOFO2PVocMS',
+            'endpoint_url': 'http://minio:9000'
+        }
+        i=0
+        for chank in pd.read_csv(f's3://from-sdex/test1.csv', storage_options=storage_options, chunksize=1000):
+            print(i)
+            i += 1
+            chank.to_sql('test',
+                         engine_kap,
+                        schema='temp_247_sch',
+                        if_exists='replace',
+                        index=False)
+        # def read_s3(key: str, bucket_name: str) -> str:
+        #     hook = S3Hook(aws_conn_id='s3_conn', verify=False)
+        #     buffer = io.BytesIO()
+        #     s3_obj = hook.get_key(key, bucket_name)
+        #     s3_obj.download_fileobj(buffer)
+        #     buf = buffer.getvalue()
+
+        #     b = buf.decode('utf-8')
+        #     b = b.replace('\0', '').replace('""', '')
+        #     return pd.read_csv(io.StringIO(b), sep=';', encoding='utf-8', dtype='str', chunksize=1000)
+        
+        # engine_kap = _get_engine(CONN_ID_KAP)
+        # list_file = ['test.csv']
+        # for file in list_file:
+        #     print(file)
+        #     i = 0
+        #     for chank in read_s3(file, bucket_name):
+        #         print(i)
+        #         i += 1
+        #         chank.to_sql('test',
+        #               engine_kap,
+        #               schema='temp_247_sch',
+        #               if_exists='replace',
+        #               index=False)
     
     test()
     # session = boto3.session.Session()
