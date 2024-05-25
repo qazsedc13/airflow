@@ -10,9 +10,10 @@ from sqlalchemy import create_engine, text
 from airflow.hooks.S3_hook import S3Hook
 import io
 import pandas as pd
+from airflow.providers.amazon.aws.transfers.s3_to_sql import S3ToSqlOperator
 
 with DAG(
-    dag_id='boto3_test',
+    dag_id='s3_to_postgres_use_operator_S3ToSqlOperator',
     schedule='@once',
     start_date=datetime(2023, 1, 1),
     catchup=False,
@@ -54,6 +55,16 @@ with DAG(
     #     endpoint_url=extra['host'],
     #     verify=False
     # )
+
+    transfer_s3_to_sql = S3ToSqlOperator(
+        task_id="transfer_s3_to_sql",
+        s3_bucket=s3_bucket_name,
+        s3_key=s3_key,
+        table=SQL_TABLE_NAME,
+        column_list=SQL_COLUMN_LIST,
+        parser=parse_csv_to_list,
+        sql_conn_id=conn_id_name,
+    )
 
     @task
     def test():
