@@ -1,33 +1,48 @@
-# Приведены команды для запуска на linux
-Предварительно должен быть установлен Docker и docker-compose
-## Создаём папки (обязательно)
-mkdir -p ./dags ./logs ./plugins
-echo -e "AIRFLOW_UID=$(id -u)" > .env
+# Airflow Data Pipelines
 
-## Запускаем инициализацию (не обязательно)
-docker compose up airflow-init
+Проект для локального запуска и разработки конвейеров данных (DAGs) с использованием Apache Airflow в Docker.
 
-### Должен быть такой вывод
-airflow-init_1       | Upgrades done
-airflow-init_1       | Admin user airflow created
-airflow-init_1       | 2.5.0
-start_airflow-init_1 exited with code 0
+## Описание
+Данный проект предоставляет настроенную среду Apache Airflow для оркестрации задач обработки данных. Включены примеры DAG, которые выполняют извлечение данных о курсах валют из внешних API, работу с S3 (boto3), а также взаимодействие с базами данных PostgreSQL и SQLite.
 
+## Технологический стек
+- **Оркестрация:** Apache Airflow 2.6.1
+- **Контейнеризация:** Docker, Docker Compose
+- **Язык программирования:** Python 3.9
+- **Базы данных:** PostgreSQL 13 (основная БД Airflow), SQLite (для примеров)
+- **Брокер сообщений:** Redis (для CeleryExecutor)
+- **Библиотеки Python:** Pandas, Boto3, Psycopg2
 
-## Запуск сервиса
-docker-compose up
+## Установка и запуск
 
-## Остановка
-### простая остановка
-docker-compose stop
-### остановка с удалением контейнеров и образов
-docker-compose down --volumes --rmi all
+1. Убедитесь, что у вас установлены **Docker** и **Docker Compose**.
+2. Склонируйте репозиторий:
+   ```bash
+   git clone git@github.com:qazsedc13/airflow.git
+   ```
+   И перейдите в папку проекта.
+3. Подготовьте файл `.env` (если требуется специфическая конфигурация).
+4. Запустите сервисы:
+   ```bash
+   docker-compose up -d
+   ```
+5. После запуска Airflow будет доступен по адресу: [http://localhost:8080](http://localhost:8080)
+   - Логин по умолчанию: `airflow`
+   - Пароль по умолчанию: `airflow`
 
-# Комментарии и полезные ссылки
+## Примеры использования
+В папке `dags/` содержатся примеры рабочих процессов:
+- `dag.py`: Извлекает курсы валют (EUR/RUB) и данные из GitHub, сохраняя их в CSV и SQLite.
+- `boto3_s3.py`: Пример взаимодействия с Amazon S3.
+- `producer.py` и `consumer.py`: Примеры реализации паттерна Producer-Consumer в Airflow.
 
-О том как использовать датасет как сенсор при обновлении таблицы в базе
-https://stackoverflow.com/questions/75869048/how-to-use-a-table-as-dataset-for-airflow-in-data-aware-scheduling
+## Структура проекта
+- `dags/` — директория с исходным кодом DAG-файлов.
+- `docker-compose.yaml` — конфигурация Docker-контейнеров (webserver, scheduler, worker, redis, postgres).
+- `.env` — файл с переменными окружения.
+- `.gitignore` — список игнорируемых файлов для Git.
 
-запуск одного дага по факту
-    обновления кого-нибудь темпового файла
-    Информация отсюда: https://youtu.be/kPI2mPs-eQA
+## Зависимости и требования
+- Docker Engine 20.10.0+
+- Docker Compose v2.0.0+
+- Минимум 4 ГБ оперативной памяти для стабильной работы Airflow.
